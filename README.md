@@ -1,15 +1,16 @@
-# Contribution [#]: [Issue Title]
+# Contribution [#9850]: [Add alternative Status Badge with first letter capitalized
+ #9850]
 
 **Contribution Number:** [1 / 2 / 3]  
 **Student:** [Your Name]  
 **Issue:** [GitHub issue link]  
-**Status:** [Phase I / Phase II / Phase III / Phase IV] [In Progress / Complete]
+**Status:** [Phase I  Complete]
 
 ---
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs explaining why this issue interests you, how it matches your skills/learning goals, what you hope to learn]
+I chose this because this seems begineer friendly, choosing 2 languages I am familar with just to avoid any confusion. The Author already pointed to the exact file and line to change, and even suggested the implementation approach (adding a URL parameter). The fix is almost entirely Python, which is my primary language, and it's a real feature that actual users have requested
 
 ---
 
