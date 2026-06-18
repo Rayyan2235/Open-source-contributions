@@ -1,4 +1,4 @@
-# Contribution [#9850]: [Add alternative Status Badge with first letter capitalized
+<img width="1840" height="868" alt="image" src="https://github.com/user-attachments/assets/bccfcac6-1767-4121-9a56-6e84b62e7110" /># Contribution [#9850]: [Add alternative Status Badge with first letter capitalized
  #9850]
 
 **Contribution Number:** [1 / 2 / 3]  
@@ -37,19 +37,25 @@ I chose this because this seems begineer friendly, choosing 2 languages I am fam
 ## Reproduction Process
 
 ### Environment Setup
-
-[Notes on setting up your local development environment - challenges you faced, how you solved them]
+- OS: Windows 11 with WSL2 (Ubuntu 24.04)
+- Docker Desktop with WSL integration enabled
+- Key fix required: Added `UV_NO_CACHE: "1"` to docker-compose.yml to resolve uv cache corruption on Windows filesystem
+- Key fix required: Changed data volume from `$PWD/data:/app/data` to `weblate-data:/app/data` to resolve Linux permission errors on Windows-mounted paths
 
 ### Steps to Reproduce
+1. Run `./rundev.sh` from WSL terminal inside the repo
+2. Navigate to `http://localhost:8080`
+3. Run `docker exec dev-docker-weblate-1 weblate import_demo` to create demo data
+4. Go to `http://localhost:8080/widgets/demo/`
+5. Observe the Live Preview shows "translated 96%" — first letter is lowercase
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
-
+### Branch Link
+https://github.com/Rayyan2235/weblate/tree/feature/capitalize-status-badge
 ### Reproduction Evidence
 
 - **Commit showing reproduction:** [Link to commit in your fork]
-- **Screenshots/logs:** [If applicable]
+- **Screenshots/logs:** <img width="1840" height="868" alt="image" src="https://github.com/user-attachments/assets/dc4cc200-b4f2-42d9-8ede-0237a69613e9" />
+
 - **My findings:** [What you discovered during reproduction]
 
 ---
@@ -67,22 +73,20 @@ I chose this because this seems begineer friendly, choosing 2 languages I am fam
 ### Implementation Plan
 
 Using UMPIRE framework (adapted):
+### Implementation Plan (UMPIRE)
 
-**Understand:** [Restate the problem]
+**Understand:** The SVG status badge displays "translated X%" with a lowercase first letter. Some repositories style all badges with an uppercase first letter. There is no option to capitalize it. The fix should add an optional URL parameter so users can opt into capitalized text without changing the default behavior.
 
-**Match:** [What similar patterns/solutions exist in the codebase?]
+**Match:** `LanguageBadgeWidget` in `weblate/trans/widgets.py` already uses an `extra_parameters` system to add a `threshold` parameter. This is the exact pattern to follow — it handles both the URL parameter parsing and the Widget Settings UI dropdown automatically.
 
-**Plan:** [Step-by-step implementation plan]
-1. [Modify file X to do Y]
-2. [Add function Z]
-3. [Update tests]
+**Plan:**
+1. In `weblate/trans/widgets.py`, add an `extra_parameters` entry to `SVGBadgeWidget` for a `capitalize` option (boolean/checkbox type)
+2. In `SVGBadgeWidget.render()` around line 342, read the parameter and apply `.capitalize()` to `translated_text` if set
+3. Add a test in `weblate/trans/tests/test_widgets.py` verifying the capitalized output
 
-**Implement:** [Link to your branch/commits as you work]
+**Review:** Check Weblate's CONTRIBUTING.md for commit message format and PR conventions before submitting
 
-**Review:** [Self-review checklist - does it follow the project's contribution guidelines?]
-
-**Evaluate:** [How will you verify it works?]
-
+**Evaluate:** Run `docker exec dev-docker-weblate-1 pytest weblate/trans/tests/test_widgets.py` and visually verify the Live Preview on the widgets page shows "Translated 96%" when the parameter is enabled
 ---
 
 ## Testing Strategy
