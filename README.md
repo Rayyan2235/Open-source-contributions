@@ -1,4 +1,4 @@
-<img width="1840" height="868" alt="image" src="https://github.com/user-attachments/assets/bccfcac6-1767-4121-9a56-6e84b62e7110" /># Contribution [#9850]: [Add alternative Status Badge with first letter capitalized
+# Contribution [#9850]: [Add alternative Status Badge with first letter capitalized
  #9850]
 
 **Contribution Number:** [1 / 2 / 3]  
