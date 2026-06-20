@@ -2,9 +2,9 @@
  #9850]
 
 **Contribution Number:** [1 / 2 / 3]  
-**Student:** [Your Name]  
-**Issue:** [GitHub issue link]  
-**Status:** [Phase I  Complete]
+**Student:** Rayyan Syed
+**Issue:** https://github.com/WeblateOrg/weblate/issues/9850
+**Status:** [Phase II  Complete]
 
 ---
 
@@ -18,19 +18,26 @@ I chose this because this seems begineer friendly, choosing 2 languages I am fam
 
 ### Problem Description
 
-[In your own words, what's broken or missing?]
+The status badges in Weblate only display text in lowercase, and this issue adds an option to capitalize the first letter via a URL parameter.
 
 ### Expected Behavior
 
-[What should happen?]
+Should have an option to capitalize the first letter of the status badge and be consistent compared to other repo's like https://github.com/flathub/website 
 
 ### Current Behavior
 
-[What actually happens?]
+When opening a project and checking the status badge, it displays the status badge with all the first letter as lowercase 'translated 76%'. Whereas, we want to give the user an option to toggle the first letter to be uppercase or not.
 
 ### Affected Components
 
-[Which parts of the codebase are involved?]
+1. **`weblate/trans/widgets.py`**
+    - **`SVGBadgeWidget.render()`** (around the `gettext("translated")` line you called out)
+    - Where you’ll:
+        - add an `extra_parameters` entry for the new `capitalize` option (following the existing pattern)
+        - read the parameter inside `render()` and apply capitalization to the label text
+2. **`weblate/trans/widgets.py` (same file) — inheritance impact**
+    - **`PNGBadgeWidget`** inherits from `SVGBadgeWidget`
+    - Meaning: fixing `SVGBadgeWidget` should automatically fix the PNG badge output too (unless PNG overrides the relevant part of rendering)
 
 ---
 
