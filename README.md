@@ -116,20 +116,46 @@ Using UMPIRE framework (adapted):
 ---
 
 ## Implementation Notes
+## Implementation Notes
 
-### Week [X] Progress
+### Week 3 Progress
+Built the core fix for issue #9850. Added a `capitalize` URL parameter to `SVGBadgeWidget` 
+in `weblate/trans/widgets.py` following the existing `extra_parameters` pattern used by 
+`LanguageBadgeWidget` for its `threshold` parameter (as directed by maintainer nijel).
 
-[What you built this week, challenges faced, decisions made]
+**What was built:**
+- Added `extra_parameters` entry to `SVGBadgeWidget` with `capitalize` as a number 
+  type (min: 0, max: 1, step: 1)
+- Added logic in `render()` to read the parameter from `request.GET` and apply 
+  `.capitalize()` to the badge text if set
+- Added error handling for invalid parameter values using `messages.error()`
 
-### Week [Y] Progress
+**Challenges faced:**
+- Considered using a `"checkbox"` type for better UX but confirmed `ExtraParametersDict` 
+  only supports `"number"` — switching would require changes to the type system, 
+  `widgets.js`, and value parsing. Kept `"number"` to match existing patterns and 
+  minimize review friction.
+- Significant time spent on Windows/WSL2 Docker setup before being able to reproduce 
+  the bug locally (see Environment Setup section)
 
-[Continue documenting as you work]
+**Decisions made:**
+- Used `"number"` type (0/1) over a custom checkbox to stay consistent with 
+  `LanguageBadgeWidget.threshold` pattern
+- Added proper error handling rather than silently defaulting to 0
 
-### Code Changes
+## Code Changes
 
-- **Files modified:** [List]
-- **Key commits:** [Links to important commits]
-- **Approach decisions:** [Why you chose certain approaches]
+- **Files modified:** `weblate/trans/widgets.py`
+- **Key commits:** [feat(widgets): add capitalize parameter to SVGBadgeWidget](https://github.com/Rayyan2235/weblate/commit/fe2018d95707033dbc16e8478bd1ea7654aaf782)
+- **Approach decisions:** Followed `LanguageBadgeWidget.extra_parameters` pattern 
+  as suggested by maintainer nijel. Used `"number"` type constrained to 0/1 rather 
+  than introducing a new checkbox type to avoid expanding scope into the frontend 
+  and type system.
+
+### Week 4 Plan
+- Write tests in `weblate/trans/tests/test_widgets.py`
+- Run full widget test suite to verify no regressions
+- Submit PR
 
 ---
 
