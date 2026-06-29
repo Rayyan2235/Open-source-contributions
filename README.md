@@ -4,7 +4,7 @@
 **Contribution Number:** [1 / 2 / 3]  
 **Student:** Rayyan Syed
 **Issue:** https://github.com/WeblateOrg/weblate/issues/9850
-**Status:** [Phase II  Complete]
+**Status:** [Phase IV  Complete]
 
 ---
 
@@ -99,26 +99,29 @@ Using UMPIRE framework (adapted):
 ## Testing Strategy
 
 ### Unit Tests
-
-- [ ] Test case 1: [Description]
-- [ ] Test case 2: [Description]
-- [ ] Test case 3: [Description]
+- `test_svg_badge_default_lowercase` — verifies badge text is lowercase by default when no parameter is passed
+- `test_svg_badge_capitalize` — verifies `?capitalize=1` renders the badge text as `Translated` 
+- `test_svg_badge_capitalize_disabled` — verifies `?capitalize=0` keeps the text lowercase
+- `test_svg_badge_capitalize_invalid` — verifies non-integer input is caught gracefully via ValueError handling and defaults to lowercase
+- `test_status_badge_capitalize` — verifies PNGBadgeWidget inherits the capitalize behavior from SVGBadgeWidget
 
 ### Integration Tests
-
-- [ ] Integration scenario 1
-- [ ] Integration scenario 2
+- All 14 tests in `WidgetsTest` pass with no regressions introduced
 
 ### Manual Testing
-
-[What you tested manually and results]
+Verified end-to-end against the live local server at `http://localhost:8080/widgets/demo/`:
+- Default badge shows `translated 96%` — lowercase unchanged ✅
+- With `?capitalize=1` badge shows `Translated 96%` ✅
+- With `?capitalize=0` badge shows `translated 96%` ✅
+- With `?capitalize=invalid` falls back to `translated 96%` with no crash ✅
+- Widget Settings panel shows the new Capitalize field automatically via `extra_parameters` ✅
 
 ---
 
-## Implementation Notes
+
 ## Implementation Notes
 
-### Week 3 Progress
+### Week 3 Done
 Built the core fix for issue #9850. Added a `capitalize` URL parameter to `SVGBadgeWidget` 
 in `weblate/trans/widgets.py` following the existing `extra_parameters` pattern used by 
 `LanguageBadgeWidget` for its `threshold` parameter (as directed by maintainer nijel).
@@ -152,8 +155,8 @@ in `weblate/trans/widgets.py` following the existing `extra_parameters` pattern 
   than introducing a new checkbox type to avoid expanding scope into the frontend 
   and type system.
 
-### Week 4 Plan
-- Write tests in `weblate/trans/tests/test_widgets.py`
+### Week 4 Done
+- Write tests in `weblate/trans/tests/test_widgets.py` - Tests can be seen under 'Testiing Strategy'
 - Run full widget test suite to verify no regressions
 - Submit PR
 
@@ -161,15 +164,31 @@ in `weblate/trans/widgets.py` following the existing `extra_parameters` pattern 
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** https://github.com/WeblateOrg/weblate/pull/20309
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:**
+Closes #9850
+
+What this does?
+Adds an optional ?capitalize=1 URL parameter to the SVG and PNG status badges. When set, the badge text renders as Translated 76% instead of the default translated 76%. Default behavior is unchanged.
+
+Why was this PR needed?
+Some repositories like Flathub style all their badges with an uppercase first letter. Weblate badges showed inconsistently lowercase next to them with no option to change it.
+
+Approach:
+Follows the existing extra_parameters pattern used by LanguageBadgeWidget for its threshold parameter, as suggested by @nijel. No new widget class needed — PNGBadgeWidget inherits the behavior automatically via SVGBadgeWidget.
+
+Changes:
+weblate/trans/widgets.py — added extra_parameters entry and capitalize logic to SVGBadgeWidget.render()
+weblate/trans/tests/test_widgets.py — added 5 tests covering default behavior, capitalize on/off, invalid input, and PNG badge inheritance
+Testing:
+All 14 tests in WidgetsTest pass.
 
 **Maintainer Feedback:**
-- [Date]: [Summary of feedback received]
-- [Date]: [How you addressed it]
+- 06/26 : Thanks for your contribution, but a more complete solution was just merged via #20257.
+- 06/27: Thanks for the review @nijel! Understood. I can see #20257 took a more complete approach. Is there anything in my implementation you'd suggest I improve for future contributions to Weblate?
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** Closed, as someone else's PR request was merged instead. Initially, when picking the issue, there was noone in conversation history asking to pick this issue hence why I went with it. However, someone else swooped in before I could submit my PR.
 
 ---
 
@@ -177,20 +196,18 @@ in `weblate/trans/widgets.py` following the existing `extra_parameters` pattern 
 
 ### Technical Skills Gained
 
-[What you learned technically]
+Mastering git commands and being able to navigate large scaled codebases. Additionally, writing comprehensive tests
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
+Most difficult component for me was setting up the local dev environment and I needed lots of help from Claude to guide me towards the right direction and we came out on top.
 
 ### What I'd Do Differently Next Time
 
-[Reflection on your process]
+Try relying less on Claude
 
 ---
 
 ## Resources Used
+- https://docs.weblate.org/en/latest/contributing/
 
-- [Link to helpful documentation]
-- [Tutorial or Stack Overflow post that helped]
-- [GitHub issues or discussions that helped]
